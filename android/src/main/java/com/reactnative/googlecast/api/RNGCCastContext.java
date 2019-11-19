@@ -2,20 +2,25 @@ package com.reactnative.googlecast.api;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.mediarouter.app.MediaRouteButton;
+import androidx.mediarouter.media.MediaRouter;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.annotations.VisibleForTesting;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.IntroductoryOverlay;
@@ -26,6 +31,7 @@ import com.reactnative.googlecast.components.RNGoogleCastButtonManager;
 import com.reactnative.googlecast.types.RNGCCastState;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RNGCCastContext
@@ -119,6 +125,29 @@ public class RNGCCastContext
           promise.resolve(true);
         } else {
           promise.resolve(false);
+        }
+      }
+    });
+  }
+
+  @ReactMethod
+  public void getRoutes(final Promise promise) {
+    getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+      @Override
+      public void run() {
+        MediaRouter mr = MediaRouter.getInstance(getReactApplicationContext());
+        WritableArray devicesList = Arguments.createArray();
+        try {
+            for (MediaRouter.RouteInfo existingChromecast : mr.getRoutes()) {
+              Log.e("DEVICE", existingChromecast.getName());
+              WritableMap singleDevice = Arguments.createMap();
+              singleDevice.putString("id", existingChromecast.getId());
+              singleDevice.putString("name", existingChromecast.getName());
+              devicesList.pushMap(singleDevice);
+          }
+          promise.resolve(devicesList);
+        } catch (IllegalViewOperationException e) {
+          promise.reject(e);
         }
       }
     });

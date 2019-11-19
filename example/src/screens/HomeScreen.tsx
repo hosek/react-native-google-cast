@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Button,
 } from 'react-native'
 import { Navigation, Options } from 'react-native-navigation'
 import GoogleCast, { CastState, RemoteMediaClient } from '../../../lib'
@@ -91,14 +92,23 @@ class HomeScreen extends React.Component<Props, State> {
     this.castStateListener.remove()
   }
 
+  logRoutes() {
+    GoogleCast.getRoutes().then( routes => {console.log(routes);});
+  }
+
   render() {
     return (
-      <FlatList
-        data={this.state.videos}
-        keyExtractor={(item, index) => item.title}
-        renderItem={this.renderVideo}
-        style={{ width: '100%', alignSelf: 'stretch' }}
-      />
+      // <FlatList
+      //   data={this.state.videos}
+      //   keyExtractor={(item, index) => item.title}
+      //   renderItem={this.renderVideo}
+      //   style={{ width: '100%', alignSelf: 'stretch' }}
+      // />
+      <View style={{ width: '100%', alignSelf: 'stretch' }}>
+        <Button
+        title="Press me"
+        onPress={() => this.logRoutes() }/>
+      </View>
     )
   }
 
