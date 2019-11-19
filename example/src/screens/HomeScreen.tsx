@@ -10,7 +10,6 @@ import {
   Button,
 } from 'react-native'
 import { Navigation, Options } from 'react-native-navigation'
-import { SinglePickerMaterialDialog } from 'react-native-material-dialog';
 import GoogleCast, { CastState, RemoteMediaClient } from '../../../lib'
 import Video from '../Video'
 
@@ -21,8 +20,6 @@ export interface Props extends ActionSheetProps {
 interface State {
   connected: boolean
   videos: Video[]
-  singlePickerVisible: boolean
-  singlePickerSelectedItem: { value: string, label: string }
   routes: Array<{ id: string, name: string }>
 }
 
@@ -55,8 +52,6 @@ class HomeScreen extends React.Component<Props, State> {
   state: State = {
     connected: false,
     videos: [],
-    singlePickerVisible: false,
-    singlePickerSelectedItem: undefined,
     routes:[],
   }
 
@@ -98,7 +93,9 @@ class HomeScreen extends React.Component<Props, State> {
       .then(videos => this.setState({ videos }))
       .catch(console.error)
 
-    GoogleCast.getRoutes().then( routes => this.setState({ routes }));
+    GoogleCast.getRoutes()
+      .then( routes => this.setState({ routes }))
+      .catch(console.error);
   }
 
   componentWillUnmount() {
@@ -106,65 +103,43 @@ class HomeScreen extends React.Component<Props, State> {
   }
 
   logRoutes() {
-    //GoogleCast.getRoutes().then( routes => {console.log(routes);});
-    this.setState({ singlePickerVisible: true })
+    GoogleCast.getRoutes().then( routes => {console.log(routes);});
+  }
+
+  selectRoute(item: {name: string, id: string}) {
+    GoogleCast.selectRoute(item).then( routes => {console.log(routes);});
   }
 
   render() {
     return (
-      // <FlatList
-      //   data={this.state.videos}
-      //   keyExtractor={(item, index) => item.title}
-      //   renderItem={this.renderVideo}
-      //   style={{ width: '100%', alignSelf: 'stretch' }}
-      // />
+      
       <View style={{ width: '100%', alignSelf: 'stretch' }}>
         <Button
-        title="Press me"
+        title="Scan"
         onPress={() => this.logRoutes() }/>
-       <Text numberOfLines={1}>
-                {this.state.singlePickerSelectedItem === undefined
-                  ? 'No item selected.'
-                  : `Selected: ${this.state.singlePickerSelectedItem.label}`}
-       </Text>
-       <SinglePickerMaterialDialog
-          title={'Pick one element!'}
-          items={this.state.routes.map((id, name) => ({ value: id, label: name }))}
-          visible={this.state.singlePickerVisible}
-          selectedItem={this.state.singlePickerSelectedItem}
-          onCancel={() => this.setState({ singlePickerVisible: false })}
-          onOk={result => {
-            this.setState({ singlePickerVisible: false });
-            this.setState({ singlePickerSelectedItem: result.selectedItem });
-          }}
-        />
+        <FlatList
+         data={this.state.routes}
+         keyExtractor={(item, index) => item.id}
+         renderItem={this.renderVideo}
+         style={{ width: '100%', alignSelf: 'stretch' }}
+       />
       </View>
     )
   }
-
-  renderVideo = ({ item, index }: { item: Video; index: number }) => {
-    const video = item
-    const elementId = `video${index}`
-
+  renderVideo = ({ item, index }: { item: {id: string, name: string}; index: number }) => {
+ 
     return (
       <TouchableOpacity
-        key={video.title}
-        onPress={() => this.navigateToVideo(video, elementId)}
+        key={item.id}
+        onPress={(item) => this.selectRoute(item)}
         style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
       >
-        <Navigation.Element elementId={elementId}>
-          <Image
-            source={{ uri: video.imageUrl }}
-            style={{ width: 160, height: 90 }}
-          />
-        </Navigation.Element>
+      <View style={{ flex: 1, marginLeft: 10, alignSelf: 'center' }}>
+          <Text>{item.name}</Text>
+          <Text style={{ color: 'gray' }}>{item.id}</Text>
+      </View>
 
-        <View style={{ flex: 1, marginLeft: 10, alignSelf: 'center' }}>
-          <Text>{video.title}</Text>
-          <Text style={{ color: 'gray' }}>{video.studio}</Text>
-        </View>
-
-        {this.state.connected && (
+        {/* {this.state.connected && (
           <TouchableOpacity
             onPress={() => {
               this.props.showActionSheetWithOptions(
@@ -198,11 +173,11 @@ class HomeScreen extends React.Component<Props, State> {
                   }
                 }
               )
-            }}
-          >
+            }} */}
+          {/* >
             <Image source={require('../assets/overflow.png')} />
           </TouchableOpacity>
-        )}
+        )} */}
       </TouchableOpacity>
     )
   }

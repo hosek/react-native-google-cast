@@ -154,6 +154,12 @@ public class RNGCCastContext
   }
 
   @ReactMethod
+  public void selectRoute(final Promise promise) {
+    MediaRouter mr = MediaRouter.getInstance(getReactApplicationContext());
+    mr.selectRoute()
+  }
+
+  @ReactMethod
   public void showExpandedControls() {
     ReactApplicationContext context = getReactApplicationContext();
     Intent intent =

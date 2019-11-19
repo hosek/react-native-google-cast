@@ -67,6 +67,15 @@ export default class CastContext {
   }
 
   /**
+   * Select route.
+   *
+   * @returns success.
+   */
+  static selectRoute(route:{ id: string, name: string }): Promise<boolean> {
+    return Native.selectRoute(route)
+  }
+
+  /**
    * If it has not been shown before, presents a fullscreen modal view controller that calls attention to the Cast button and displays some brief instructional text about its use.
    *
    * By default, the overlay is only displayed once. To change this, pass `once: false` in the options.
