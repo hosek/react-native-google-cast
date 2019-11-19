@@ -62,7 +62,7 @@ export default class CastContext {
    *
    * @returns map of route ids and names.
    */
-  static getRoutes(): Promise<Map<String,String>> {
+  static getRoutes(): Promise<Array<{ id: string, name: string }>> {
     return Native.getRoutes()
   }
 

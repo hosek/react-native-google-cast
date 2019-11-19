@@ -10,6 +10,7 @@ import {
   Button,
 } from 'react-native'
 import { Navigation, Options } from 'react-native-navigation'
+import { SinglePickerMaterialDialog } from 'react-native-material-dialog';
 import GoogleCast, { CastState, RemoteMediaClient } from '../../../lib'
 import Video from '../Video'
 
@@ -20,6 +21,9 @@ export interface Props extends ActionSheetProps {
 interface State {
   connected: boolean
   videos: Video[]
+  singlePickerVisible: boolean
+  singlePickerSelectedItem: { value: string, label: string }
+  routes: Array<{ id: string, name: string }>
 }
 
 class HomeScreen extends React.Component<Props, State> {
@@ -43,10 +47,17 @@ class HomeScreen extends React.Component<Props, State> {
     }
   }
 
+ 
+ 
+
+
   castStateListener: EmitterSubscription
   state: State = {
     connected: false,
     videos: [],
+    singlePickerVisible: false,
+    singlePickerSelectedItem: undefined,
+    routes:[],
   }
 
   componentDidMount() {
@@ -86,6 +97,8 @@ class HomeScreen extends React.Component<Props, State> {
     Video.findAll()
       .then(videos => this.setState({ videos }))
       .catch(console.error)
+
+    GoogleCast.getRoutes().then( routes => this.setState({ routes }));
   }
 
   componentWillUnmount() {
@@ -93,7 +106,8 @@ class HomeScreen extends React.Component<Props, State> {
   }
 
   logRoutes() {
-    GoogleCast.getRoutes().then( routes => {console.log(routes);});
+    //GoogleCast.getRoutes().then( routes => {console.log(routes);});
+    this.setState({ singlePickerVisible: true })
   }
 
   render() {
@@ -108,6 +122,22 @@ class HomeScreen extends React.Component<Props, State> {
         <Button
         title="Press me"
         onPress={() => this.logRoutes() }/>
+       <Text numberOfLines={1}>
+                {this.state.singlePickerSelectedItem === undefined
+                  ? 'No item selected.'
+                  : `Selected: ${this.state.singlePickerSelectedItem.label}`}
+       </Text>
+       <SinglePickerMaterialDialog
+          title={'Pick one element!'}
+          items={this.state.routes.map((id, name) => ({ value: id, label: name }))}
+          visible={this.state.singlePickerVisible}
+          selectedItem={this.state.singlePickerSelectedItem}
+          onCancel={() => this.setState({ singlePickerVisible: false })}
+          onOk={result => {
+            this.setState({ singlePickerVisible: false });
+            this.setState({ singlePickerSelectedItem: result.selectedItem });
+          }}
+        />
       </View>
     )
   }
