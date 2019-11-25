@@ -71,8 +71,8 @@ export default class CastContext {
    *
    * @returns success.
    */
-  static selectRoute(route:{ id: string, name: string }): Promise<boolean> {
-    return Native.selectRoute(route)
+  static selectRoute(id: string): Promise<boolean> {
+    return Native.selectRoute(id)
   }
 
   /**

@@ -106,8 +106,8 @@ class HomeScreen extends React.Component<Props, State> {
     GoogleCast.getRoutes().then( routes => {console.log(routes);});
   }
 
-  selectRoute(item: {name: string, id: string}) {
-    GoogleCast.selectRoute(item).then( routes => {console.log(routes);});
+  selectRoute(id: string) {
+    GoogleCast.selectRoute(id).then( success => {console.log(success);});
   }
 
   render() {
@@ -127,16 +127,16 @@ class HomeScreen extends React.Component<Props, State> {
     )
   }
   renderVideo = ({ item, index }: { item: {id: string, name: string}; index: number }) => {
- 
+    const {id, name} = item;
     return (
       <TouchableOpacity
-        key={item.id}
-        onPress={(item) => this.selectRoute(item)}
+        key={id}
+        onPress={() => this.selectRoute(id)}
         style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
       >
       <View style={{ flex: 1, marginLeft: 10, alignSelf: 'center' }}>
-          <Text>{item.name}</Text>
-          <Text style={{ color: 'gray' }}>{item.id}</Text>
+          <Text>{name}</Text>
+          <Text style={{ color: 'gray' }}>{id}</Text>
       </View>
 
         {/* {this.state.connected && (

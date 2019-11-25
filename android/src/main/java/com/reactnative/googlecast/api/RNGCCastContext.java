@@ -139,7 +139,6 @@ public class RNGCCastContext
         WritableArray devicesList = Arguments.createArray();
         try {
             for (MediaRouter.RouteInfo existingChromecast : mr.getRoutes()) {
-              Log.e("DEVICE", existingChromecast.getName());
               WritableMap singleDevice = Arguments.createMap();
               singleDevice.putString("id", existingChromecast.getId());
               singleDevice.putString("name", existingChromecast.getName());
@@ -154,9 +153,28 @@ public class RNGCCastContext
   }
 
   @ReactMethod
-  public void selectRoute(final Promise promise) {
-    MediaRouter mr = MediaRouter.getInstance(getReactApplicationContext());
-    mr.selectRoute()
+  public void selectRoute(final String id,final Promise promise) {
+
+    try {
+          getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+              MediaRouter mr = MediaRouter.getInstance(getReactApplicationContext());
+              for (final MediaRouter.RouteInfo existingChromecast : mr.getRoutes())
+              {
+                if(existingChromecast.getId().contentEquals(id))
+                {
+                  mr.selectRoute(existingChromecast);
+                  promise.resolve(true);
+                }
+              }
+        }
+      });
+    }
+    catch (IllegalViewOperationException e) {
+      promise.reject(e);
+  }
+
   }
 
   @ReactMethod
