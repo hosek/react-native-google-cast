@@ -14,7 +14,7 @@ import java.util.List;
 public class RNGCMediaInfo {
   public static MediaInfo fromJson(final ReadableMap json) {
     final MediaInfo.Builder builder =
-        new MediaInfo.Builder(json.getString("contentId"));
+        new MediaInfo.Builder("test");//json.getString("contentId")); // FIXME
 
 //    if (json.hasKey("adBreakClips")) {
 //      builder.setContentType(json.getString("adBreakClips"));

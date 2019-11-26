@@ -102,8 +102,34 @@ class HomeScreen extends React.Component<Props, State> {
     this.castStateListener.remove()
   }
 
-  logRoutes() {
-    GoogleCast.getRoutes().then( routes => {console.log(routes);});
+  startCasting() {
+    //GoogleCast.getRoutes().then( routes => {console.log(routes);});
+    //GoogleCast.showExpandedControls();
+
+    let video = new Video({
+      contentId: "1",
+      title: 'Big Buck Bunny',
+      subtitle: 'A large and lovable rabbit deals with three tiny bullies, led by a flying squirrel, who are determined to squelch his happiness.',
+      studio: 'Blender Foundation',
+      duration: 596,
+      mediaUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/BigBuckBunny.m3u8',
+      imageUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/images/480x270/BigBuckBunny.jpg',
+      posterUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/images/480x270/BigBuckBunny.jpg',
+    })
+
+    //let video = this.state.videos[0];
+   
+    RemoteMediaClient.getCurrent()
+      .loadMedia(video.toMediaInfo(), { autoplay: true })
+      .then(console.log)
+      .catch(console.warn)
+
+    //GoogleCast.showExpandedControls()
+   
+  }
+
+  getMediaInfo(){
+    RemoteMediaClient.getCurrent().getMediaInfo().then(console.log);
   }
 
   selectRoute(id: string) {
@@ -115,8 +141,11 @@ class HomeScreen extends React.Component<Props, State> {
       
       <View style={{ width: '100%', alignSelf: 'stretch' }}>
         <Button
-        title="Scan"
-        onPress={() => this.logRoutes() }/>
+        title="Start casting"
+        onPress={() => this.startCasting() }/>
+           <Button
+        title="Get media info"
+        onPress={() => this.getMediaInfo() }/>
         <FlatList
          data={this.state.routes}
          keyExtractor={(item, index) => item.id}

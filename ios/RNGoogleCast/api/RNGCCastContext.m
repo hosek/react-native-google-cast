@@ -79,6 +79,29 @@ RCT_REMAP_METHOD(showCastDialog,
   });
 }
 
+RCT_REMAP_METHOD(getRoutes,
+                 getRoutesWithResolver: (RCTPromiseResolveBlock) resolve
+                 rejecter: (RCTPromiseRejectBlock) reject) {
+  dispatch_async(dispatch_get_main_queue(), ^{
+     GCKDiscoveryManager manager = [GCKCastContext.sharedInstance discoveryManager];
+    //[GCKCastContext.sharedInstance presentCastDialog];
+    //NSLog( @"CAST_DEBUG: '%@'", manager );
+    resolve(@(YES));
+  });
+}
+
+RCT_REMAP_METHOD(selectRoute,
+                 deviceId:(NSString *)deviceId
+                 getRoutesWithResolver: (RCTPromiseResolveBlock) resolve
+                 rejecter: (RCTPromiseRejectBlock) reject) {
+  dispatch_async(dispatch_get_main_queue(), ^{
+     GCKDiscoveryManager manager = [GCKCastContext.sharedInstance discoveryManager];
+    //[GCKCastContext.sharedInstance presentCastDialog];
+   // NSLog( @"CAST_DEBUG: '%@'", manager );
+    resolve(@(YES));
+  });
+}
+
 RCT_REMAP_METHOD(showExpandedControls,
                  showExpandedControlsWithResolver: (RCTPromiseResolveBlock) resolve
                  rejecter: (RCTPromiseRejectBlock) reject) {
@@ -100,12 +123,23 @@ RCT_EXPORT_METHOD(showIntroductoryOverlay:(id)options
   });
 }
 
+
+
 - (void)castDeviceDidChange:(NSNotification *)notification {
   if (!hasListeners) return;
 
   GCKCastState state = [GCKCastContext sharedInstance].castState;
   [self sendEventWithName:CAST_STATE_CHANGED
                      body:[RCTConvert fromGCKCastState:state]];
+}
+
+- (void) didUpdateDeviceList:{
+    GCKDiscoveryManager manager = [GCKCastContext.sharedInstance discoveryManager];
+    int deviceCount = [manager deviceCount];
+    for (int i = 1; i <= deviceCount; i++)
+    {
+        NSLog(@"%s", [manager deviceAtIndex:i]);
+    }
 }
 
 @end

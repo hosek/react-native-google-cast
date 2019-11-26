@@ -195,23 +195,28 @@ public class RNGCCastContext
       new Handler().post(new Runnable() {
         @Override
         public void run() {
-          IntroductoryOverlay.Builder builder = new IntroductoryOverlay.Builder(getCurrentActivity(), button);
+          getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+              IntroductoryOverlay.Builder builder = new IntroductoryOverlay.Builder(getCurrentActivity(), button);
 
-          if (options.getBoolean("once")) {
-            builder.setSingleTime();
-          }
-
-          builder.setOnOverlayDismissedListener(
-            new IntroductoryOverlay.OnOverlayDismissedListener() {
-              @Override
-              public void onOverlayDismissed() {
-                promise.resolve(true);
+              if (options.getBoolean("once")) {
+                builder.setSingleTime();
               }
-            });
 
-          IntroductoryOverlay overlay = builder.build();
+              builder.setOnOverlayDismissedListener(
+                      new IntroductoryOverlay.OnOverlayDismissedListener() {
+                        @Override
+                        public void onOverlayDismissed() {
+                          promise.resolve(true);
+                        }
+                      });
 
-          overlay.show();
+              IntroductoryOverlay overlay = builder.build();
+
+              overlay.show();
+            }
+          });
         }
       });
     }

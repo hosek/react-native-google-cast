@@ -182,4 +182,8 @@ export default class RemoteMediaClient {
   stop(customData?: object): Promise<void> {
     return Native.stop(customData)
   }
+
+  getMediaInfo(): Promise<void> {
+    return Native.getMediaInfo()
+  }
 }

@@ -6,5 +6,5 @@ static NSString *const CAST_STATE_CHANGED =
 @"GoogleCast:CastStateChanged";
 
 @interface RNGCCastContext
-    : RCTEventEmitter <RCTBridgeModule, GCKCastDeviceStatusListener>
+    : RCTEventEmitter <RCTBridgeModule, GCKCastDeviceStatusListener, GCKDiscoveryManagerListener>
 @end

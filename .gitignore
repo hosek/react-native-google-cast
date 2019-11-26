@@ -64,3 +64,4 @@ example/android/gradlew.bat
 /lib/**/*.js
 docs/api/
 docs-website/
+example/ios/Podfile.lock
