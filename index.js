@@ -139,10 +139,25 @@ export default {
   selectRoute(id: string): Promise<boolean> {
     return GoogleCast.selectRoute(id)
   },
-
+  /**
+   * Get actual playing stream metadata.
+   *
+   * @returns success.
+   */
   getMediaInfo(): Promise<string> {
     return GoogleCast.getMediaInfo()
   },
+
+  /**
+   * Get actual volume.
+   *
+   * @returns success.
+   */
+  getVolume(): Promise<number> {
+    return GoogleCast.getVolume()
+  },
+
+  
 
 
   /**

@@ -16,13 +16,50 @@ import styles from './main.style'
 import GoogleCast, { CastButton } from 'react-native-google-cast'
 import ActionButton from 'react-native-action-button'
 
-const MiniController = () => (  <View style={{flex: 1, flexDirection: 'row'}}>
-  <Image
-    style={{width: 50, height: 50}}
-    source={{uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/images/images/ForBiggerBlazes.jpg'}}
-  />
-  <Text>TEST</Text>
-  </View>)
+// Establishing connection to Chromecast
+GoogleCast.EventEmitter.addListener(GoogleCast.SESSION_STARTING, () => {
+  /* callback */
+})
+
+// Connection established
+GoogleCast.EventEmitter.addListener(GoogleCast.SESSION_STARTED, () => {
+  console.log("GoogleCast.SESSION_STARTED");
+})
+
+// Connection failed
+GoogleCast.EventEmitter.addListener(GoogleCast.SESSION_START_FAILED, error => {
+  console.error(error)
+})
+
+// Connection suspended (your application went to background or disconnected)
+GoogleCast.EventEmitter.addListener(GoogleCast.SESSION_SUSPENDED, () => {
+  /* callback */
+})
+
+// Attempting to reconnect
+GoogleCast.EventEmitter.addListener(GoogleCast.SESSION_RESUMING, () => {
+  /* callback */
+})
+
+// Reconnected
+GoogleCast.EventEmitter.addListener(GoogleCast.SESSION_RESUMED, () => {
+  /* callback */
+})
+
+// Disconnecting
+GoogleCast.EventEmitter.addListener(GoogleCast.SESSION_ENDING, () => {
+  /* callback */
+})
+
+// Disconnected (error provides explanation if ended forcefully)
+GoogleCast.EventEmitter.addListener(GoogleCast.SESSION_ENDED, error => {
+  /* callback */
+})
+
+GoogleCast.EventEmitter.addListener(
+  GoogleCast.MEDIA_STATUS_UPDATED,
+  ({ mediaStatus }) => { console.log(mediaStatus)},
+)
 
 class Main extends React.Component {
   constructor(props) {
@@ -34,6 +71,7 @@ class Main extends React.Component {
 
     this.state = {
       videos: [],
+      mediaMetadata: { metadata: { title : "None" }},
     }
   }
 
@@ -69,7 +107,6 @@ class Main extends React.Component {
   cast(video) {
     GoogleCast.getCastDevice().then(console.log)
     GoogleCast.castMedia(video)
-    GoogleCast.launchExpandedControls()
     this.sendMessage()
   }
 
@@ -78,7 +115,10 @@ class Main extends React.Component {
   }
 
   getMediaInfo(){
-    GoogleCast.getMediaInfo().then(console.log)
+    GoogleCast.getMediaInfo().then( media => { 
+      this.setState({ mediaMetadata: JSON.parse(media) });
+      console.log(JSON.parse(media));
+    });
   }
 
   onActionSelected = position => {
@@ -129,6 +169,9 @@ class Main extends React.Component {
          <Button
             title="Show custom dialog"
             onPress={() => this.openCustomDialog() }/>
+        <Button
+            title="Show extended control"
+            onPress={() =>  GoogleCast.launchExpandedControls() }/>
            <Button
             title="Get media info"
             onPress={() => this.getMediaInfo() }/>
@@ -137,7 +180,10 @@ class Main extends React.Component {
                 onPress={() => this.openCustomDialog() }
                 renderIcon={() => (<CastButton tintColor='white'/>)}
           />
-         <MiniController/>
+          <View style={{ width: '100%', heigh: '30' , backgroundColor: 'white'}}>
+          <Text>{ this.state.mediaMetadata.metadata.title }</Text>
+          </View>
+       
         <FlatList
           data={this.state.videos}
           keyExtractor={(item, index) => index.toString()}

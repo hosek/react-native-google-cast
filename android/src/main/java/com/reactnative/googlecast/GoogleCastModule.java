@@ -412,6 +412,21 @@ public class GoogleCastModule
     }
 
     @ReactMethod
+    public void getVolume(final Promise promise) {
+        if (mCastSession != null) {
+            getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+                @Override
+                public void run() {
+                  if (mCastSession == null) {
+                      promise.reject("getVolume","No session");
+                  }
+                  promise.resolve(mCastSession.getVolume());
+                }
+            });
+        }
+    }
+
+    @ReactMethod
     public void endSession(final boolean stopCasting, final Promise promise) {
         getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
