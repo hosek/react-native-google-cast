@@ -14,6 +14,15 @@ import {
 } from 'react-native'
 import styles from './main.style'
 import GoogleCast, { CastButton } from 'react-native-google-cast'
+import ActionButton from 'react-native-action-button'
+
+const MiniController = () => (  <View style={{flex: 1, flexDirection: 'row'}}>
+  <Image
+    style={{width: 50, height: 50}}
+    source={{uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/images/images/ForBiggerBlazes.jpg'}}
+  />
+  <Text>TEST</Text>
+  </View>)
 
 class Main extends React.Component {
   constructor(props) {
@@ -64,6 +73,14 @@ class Main extends React.Component {
     this.sendMessage()
   }
 
+  openCustomDialog(){
+    GoogleCast.getRoutes().then(console.log)
+  }
+
+  getMediaInfo(){
+    GoogleCast.getMediaInfo().then(console.log)
+  }
+
   onActionSelected = position => {
     switch (position) {
       case 0:
@@ -109,12 +126,25 @@ class Main extends React.Component {
             <CastButton style={styles.castButtonIOS} />
           </View>
         )}
+         <Button
+            title="Show custom dialog"
+            onPress={() => this.openCustomDialog() }/>
+           <Button
+            title="Get media info"
+            onPress={() => this.getMediaInfo() }/>
+             <ActionButton
+                buttonColor="rgba(231,76,60,1)"
+                onPress={() => this.openCustomDialog() }
+                renderIcon={() => (<CastButton tintColor='white'/>)}
+          />
+         <MiniController/>
         <FlatList
           data={this.state.videos}
           keyExtractor={(item, index) => index.toString()}
           renderItem={this.renderVideo}
           style={{ width: '100%', alignSelf: 'stretch' }}
         />
+       
       </View>
     )
   }

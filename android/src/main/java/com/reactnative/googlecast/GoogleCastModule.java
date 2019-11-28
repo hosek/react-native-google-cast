@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.media.MediaRouter;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -13,9 +14,11 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.annotations.VisibleForTesting;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.MediaInfo;
@@ -129,6 +132,67 @@ public class GoogleCastModule
             public void run() {
                 GoogleCastButtonManager.getGoogleCastButtonManagerInstance().performClick();
                 Log.e(REACT_CLASS, "showCastPicker... ");
+            }
+        });
+    }
+
+  @ReactMethod
+  public void getRoutes(final Promise promise) {
+    getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+      @Override
+      public void run() {
+        MediaRouter mr = MediaRouter.getInstance(getReactApplicationContext());
+        WritableArray devicesList = Arguments.createArray();
+        try {
+            for (MediaRouter.RouteInfo existingChromecast : mr.getRoutes()) {
+              WritableMap singleDevice = Arguments.createMap();
+              singleDevice.putString("id", existingChromecast.getId());
+              singleDevice.putString("name", existingChromecast.getName());
+              devicesList.pushMap(singleDevice);
+          }
+          promise.resolve(devicesList);
+        } catch (IllegalViewOperationException e) {
+          promise.reject(e);
+        }
+      }
+    });
+  }
+
+  @ReactMethod
+  public void selectRoute(final String id,final Promise promise) {
+
+      try {
+          getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+              @Override
+              public void run() {
+                  MediaRouter mr = MediaRouter.getInstance(getReactApplicationContext());
+                  for (final MediaRouter.RouteInfo existingChromecast : mr.getRoutes()) {
+                      if (existingChromecast.getId().contentEquals(id)) {
+                          mr.selectRoute(existingChromecast);
+                          promise.resolve(true);
+                      }
+                  }
+              }
+          });
+      } catch (IllegalViewOperationException e) {
+          promise.reject(e);
+      }
+  }
+
+  @ReactMethod
+    public void getMediaInfo(final Promise promise) {
+       getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                RemoteMediaClient remoteMediaClient = mCastSession.getRemoteMediaClient();
+                if (remoteMediaClient == null) {
+                    promise.reject("getMediaInfo","No remoteMediaClient");
+                }
+                MediaInfo mi = remoteMediaClient.getMediaInfo();
+                if (mi == null) {
+                    promise.reject("getMediaInfo","No MediaInfo");
+                }
+                promise.resolve(mi.toJson().toString());
             }
         });
     }

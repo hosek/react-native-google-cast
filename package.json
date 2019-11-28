@@ -32,7 +32,8 @@
     "url": "git@github.com:react-native-google-cast/react-native-google-cast.git"
   },
   "dependencies": {
-    "prop-types": "^15.6.0"
+    "prop-types": "^15.6.0",
+    "react-native-action-button": "^2.8.5"
   },
   "peerDependencies": {
     "react": ">=15.1 || >=16.0.0",

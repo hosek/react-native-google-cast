@@ -123,6 +123,29 @@ export default {
   },
 
   /**
+   * Get available routes.
+   *
+   * @returns map of route ids and names.
+   */
+  getRoutes(): Promise<Array<{ id: string, name: string }>> {
+    return GoogleCast.getRoutes()
+  },
+
+  /**
+   * Select route.
+   *
+   * @returns success.
+   */
+  selectRoute(id: string): Promise<boolean> {
+    return GoogleCast.selectRoute(id)
+  },
+
+  getMediaInfo(): Promise<string> {
+    return GoogleCast.getMediaInfo()
+  },
+
+
+  /**
    * Enable/disable subtitles, optionally selecting a preferred subtitle language.
    *
    * @param {boolean} enabled
