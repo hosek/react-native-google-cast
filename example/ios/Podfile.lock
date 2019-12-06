@@ -108,7 +108,7 @@ SPEC CHECKSUMS:
   google-cast-sdk-no-bluetooth: c5e18481d73d491d1464d60d592a7357d23bc300
   Protobuf: a4dc852ad69c027ca2166ed287b856697814375b
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
-  react-native-google-cast: 3e38104843a8dd40d284629678568233abdf7e13
+  react-native-google-cast: 180a55aef6ff7b85bf0383d9fed3644627999e4d
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
 PODFILE CHECKSUM: 1ddf61d211bd64aa9b2350c2b155edc66f3d7f00

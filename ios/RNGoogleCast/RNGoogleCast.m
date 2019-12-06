@@ -270,6 +270,55 @@ RCT_EXPORT_METHOD(setVolume : (float)volume) {
     }
 }
 
+
+
+
+
+RCT_EXPORT_METHOD(getRoutes: (RCTPromiseResolveBlock) resolve
+                  rejecter: (RCTPromiseRejectBlock) reject) {
+    if (GCKCastContext.sharedInstance.discoveryManager.hasDiscoveredDevices){
+        NSMutableArray *devices = [[NSMutableArray alloc]init];
+        for (int i = 0; i < GCKCastContext.sharedInstance.discoveryManager.deviceCount; i++)
+        {
+            GCKDevice* device = [GCKCastContext.sharedInstance.discoveryManager deviceAtIndex:i];
+            [devices addObject: @{ @"id": device.deviceID, @"name": device.friendlyName}] ;
+        }
+            resolve(devices);
+    }
+    else{
+        reject(@"No devices", @"No ChromeCast devices found!", nil);
+    }
+}
+
+
+RCT_EXPORT_METHOD(selectRoute: (NSString *)routeID
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    
+    if (routeID == nil || [routeID isEqualToString:@""]){
+        reject(@"Wrong routeID", @"Route ID is empty!", nil);
+        return;
+    }
+    
+    if (GCKCastContext.sharedInstance.discoveryManager.hasDiscoveredDevices){
+        for (int i = 0; i < GCKCastContext.sharedInstance.discoveryManager.deviceCount; i++)
+        {
+            GCKDevice* device = [GCKCastContext.sharedInstance.discoveryManager deviceAtIndex:i];
+            if ([device.deviceID isEqualToString:routeID]){
+                BOOL result = [GCKCastContext.sharedInstance.sessionManager startSessionWithDevice:device];
+                resolve(result ? @YES: @NO);
+                return;
+            }
+        }
+    }
+    
+    reject(@"Cannot select route", @"Route ID not found!", nil);
+    
+}
+
+
+
+
 #pragma mark - GCKSessionManagerListener events
 
 -(void)sessionManager:(GCKSessionManager *)sessionManager willStartSession:(GCKCastSession *)session {
@@ -277,6 +326,10 @@ RCT_EXPORT_METHOD(setVolume : (float)volume) {
 }
 
 -(void)sessionManager:(GCKSessionManager *)sessionManager didStartCastSession:(GCKCastSession *)session {
+    
+    //TEST
+    [self getRoutes:nil rejecter:nil];
+    
   castSession = session;
   [session.remoteMediaClient addListener:self];
   [self sendEventWithName:SESSION_STARTED body:@{}];
