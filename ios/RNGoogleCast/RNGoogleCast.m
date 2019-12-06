@@ -332,7 +332,6 @@ RCT_EXPORT_METHOD(getMediaInfo: (RCTPromiseResolveBlock) resolve
 }
 
 -(void)sessionManager:(GCKSessionManager *)sessionManager didStartCastSession:(GCKCastSession *)session {
-     
   castSession = session;
   [session.remoteMediaClient addListener:self];
   [self sendEventWithName:SESSION_STARTED body:@{}];
