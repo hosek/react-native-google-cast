@@ -271,8 +271,7 @@ RCT_EXPORT_METHOD(setVolume : (float)volume) {
 }
 
 
-
-
+#pragma mark - Custom Dialog methods
 
 RCT_EXPORT_METHOD(getRoutes: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject) {
@@ -299,7 +298,6 @@ RCT_EXPORT_METHOD(selectRoute: (NSString *)routeID
         reject(@"Wrong routeID", @"Route ID is empty!", nil);
         return;
     }
-    
     if (GCKCastContext.sharedInstance.discoveryManager.hasDiscoveredDevices){
         for (int i = 0; i < GCKCastContext.sharedInstance.discoveryManager.deviceCount; i++)
         {
@@ -311,12 +309,20 @@ RCT_EXPORT_METHOD(selectRoute: (NSString *)routeID
             }
         }
     }
-    
     reject(@"Cannot select route", @"Route ID not found!", nil);
-    
 }
 
+RCT_EXPORT_METHOD(getMediaInfo: (RCTPromiseResolveBlock) resolve
+                  rejecter: (RCTPromiseRejectBlock) reject) {
 
+    GCKMediaMetadata* metadata = castSession.remoteMediaClient.mediaStatus.mediaInformation.metadata;
+    //Or maybe only mediaInformation???
+    if (metadata==nil){
+        reject(@"Error geeting media metadata", @"No metatada available", nil);
+    }else{
+        resolve(metadata.description);
+    }
+}
 
 
 #pragma mark - GCKSessionManagerListener events
@@ -326,10 +332,7 @@ RCT_EXPORT_METHOD(selectRoute: (NSString *)routeID
 }
 
 -(void)sessionManager:(GCKSessionManager *)sessionManager didStartCastSession:(GCKCastSession *)session {
-    
-    //TEST
-    [self getRoutes:nil rejecter:nil];
-    
+     
   castSession = session;
   [session.remoteMediaClient addListener:self];
   [self sendEventWithName:SESSION_STARTED body:@{}];
