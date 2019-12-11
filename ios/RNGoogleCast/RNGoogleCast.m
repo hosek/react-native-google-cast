@@ -285,7 +285,7 @@ RCT_EXPORT_METHOD(getRoutes: (RCTPromiseResolveBlock) resolve
             resolve(devices);
     }
     else{
-        reject(@"No devices", @"No ChromeCast devices found!", nil);
+        reject(@"No devices", @"No ChromeCast devices found!", [[NSError alloc]init]);
     }
 }
 
@@ -295,7 +295,7 @@ RCT_EXPORT_METHOD(selectRoute: (NSString *)routeID
                   rejecter:(RCTPromiseRejectBlock)reject) {
     
     if (routeID == nil || [routeID isEqualToString:@""]){
-        reject(@"Wrong routeID", @"Route ID is empty!", nil);
+        reject(@"Wrong routeID", @"Route ID is empty!", [[NSError alloc]init]);
         return;
     }
     if (GCKCastContext.sharedInstance.discoveryManager.hasDiscoveredDevices){
@@ -309,16 +309,16 @@ RCT_EXPORT_METHOD(selectRoute: (NSString *)routeID
             }
         }
     }
-    reject(@"Cannot select route", @"Route ID not found!", nil);
+    reject(@"Cannot select route", @"Route ID not found!", [[NSError alloc]init]);
 }
 
 RCT_EXPORT_METHOD(getMediaInfo: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject) {
 
-    GCKMediaMetadata* metadata = castSession.remoteMediaClient.mediaStatus.mediaInformation.metadata;
+    GCKMediaInformation* metadata = castSession.remoteMediaClient.mediaStatus.mediaInformation;
     //Or maybe only mediaInformation???
     if (metadata==nil){
-        reject(@"Error geeting media metadata", @"No metatada available", nil);
+        reject(@"Error geeting media metadata", @"No metatada available", [[NSError alloc]init]);
     }else{
         resolve(metadata.description);
     }
