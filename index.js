@@ -157,6 +157,15 @@ export default {
     return GoogleCast.getVolume()
   },
 
+  /**
+   * Disconnect.
+   *
+   * @returns success.
+   */
+  unselectRoute(): Promise<number> {
+    return GoogleCast.unselectRoute()
+  },
+
   
 
 

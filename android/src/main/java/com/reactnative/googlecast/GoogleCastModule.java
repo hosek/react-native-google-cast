@@ -180,6 +180,23 @@ public class GoogleCastModule
   }
 
   @ReactMethod
+  public void unselectRoute(final Promise promise) {
+
+      try {
+          getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+              @Override
+              public void run() {
+                  MediaRouter mr = MediaRouter.getInstance(getReactApplicationContext());
+                  mr.unselect(MediaRouter.UNSELECT_REASON_STOPPED);
+                  promise.resolve(true);
+              }
+          });
+      } catch (IllegalViewOperationException e) {
+          promise.reject(e);
+      }
+  }
+
+  @ReactMethod
     public void getMediaInfo(final Promise promise) {
        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
