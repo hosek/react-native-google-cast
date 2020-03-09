@@ -288,9 +288,20 @@ RCT_EXPORT_METHOD(seek : (int)playPosition) {
     [castSession.remoteMediaClient seekToTimeInterval:playPosition];
   }
 }
+
 RCT_EXPORT_METHOD(setVolume : (float)volume) {
     if (castSession) {
         [castSession.remoteMediaClient setStreamVolume:volume];
+    }
+}
+
+RCT_EXPORT_METHOD(getVolume: (RCTPromiseResolveBlock) resolve
+                  rejecter: (RCTPromiseRejectBlock) reject) {
+
+    if (castSession) {
+        resolve(castSession.currentDeviceVolume);
+    }else{
+      reject(@"Error geeting volume", @"No cast session available", [[NSError alloc]init]);
     }
 }
 
