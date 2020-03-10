@@ -297,9 +297,8 @@ RCT_EXPORT_METHOD(setVolume : (float)volume) {
 
 RCT_EXPORT_METHOD(getVolume: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject) {
-
     if (castSession) {
-        resolve(castSession.currentDeviceVolume);
+        resolve([NSNumber numberWithFloat:castSession.currentDeviceVolume]);
     }else{
       reject(@"Error geeting volume", @"No cast session available", [[NSError alloc]init]);
     }
