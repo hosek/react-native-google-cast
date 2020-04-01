@@ -19,7 +19,7 @@ target 'RNGoogleCastExample' do
   pod 'glog', podspec: "#{rnpath}/third-party-podspecs/glog.podspec"
   pod 'Folly', podspec: "#{rnpath}/third-party-podspecs/Folly.podspec"
 
-  pod 'react-native-google-cast/NoBluetooth', path: '../../ios/'
+  pod 'react-native-google-cast', path: '../../ios/'
 end
 
 # post_install do |installer|
