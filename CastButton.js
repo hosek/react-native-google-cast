@@ -30,7 +30,7 @@ CastButton.propTypes = {
    *
    * By default this property is set to YES. If an application wishes to handle touch events itself, it should set the property to NO and register an appropriate target and action for the touch event.
    * */
-  // triggersDefaultCastDialog: PropTypes.bool
+  triggersDefaultCastDialog: PropTypes.bool
   // accessibilityLabel: PropTypes.string
 }
 

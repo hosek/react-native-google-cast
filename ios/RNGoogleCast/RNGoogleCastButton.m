@@ -5,11 +5,14 @@
 {
   GCKUICastButton *_castButton;
   UIColor *_tintColor;
+  BOOL *_showDefaultDialog;
+
 }
 
 -(void)layoutSubviews {
   _castButton = [[GCKUICastButton alloc] initWithFrame:self.bounds];
   _castButton.tintColor = _tintColor;
+  _castButton.triggersDefaultCastDialog = _showDefaultDialog;
   [self addSubview:_castButton];
 }
 
@@ -17,6 +20,10 @@
   _tintColor = color;
   super.tintColor = color;
   [self setNeedsDisplay];
+}
+
+-(void)triggersDefaultCastDialog:(BOOL *) useDefault {
+  _showDefaultDialog = useDefault;
 }
 
 @end
