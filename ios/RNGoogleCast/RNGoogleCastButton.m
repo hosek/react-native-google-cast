@@ -6,7 +6,6 @@
   GCKUICastButton *_castButton;
   UIColor *_tintColor;
   BOOL *_showDefaultDialog;
-
 }
 
 -(void)layoutSubviews {

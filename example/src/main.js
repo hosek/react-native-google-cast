@@ -169,6 +169,10 @@ class Main extends React.Component {
          <Button
             title="Show custom dialog"
             onPress={() => this.openCustomDialog() }/>
+
+        <Button
+            title="Set volume 50%"
+            onPress={() => GoogleCast.setVolume(0.5) }/>
         <Button
             title="Show extended control"
             onPress={() =>  GoogleCast.launchExpandedControls() }/>

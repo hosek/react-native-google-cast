@@ -2,8 +2,8 @@ package com.reactnative.googlecast;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.app.MediaRouteButton;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.mediarouter.app.MediaRouteButton;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -20,6 +20,7 @@ public class GoogleCastButtonManager
 
   public static final String REACT_CLASS = "RNGoogleCastButton";
   private Integer mColor = null;
+  private boolean mUseDefaultDialog = true;
   private static MediaRouteButton googleCastButtonManagerInstance;
 
   @Override
@@ -60,6 +61,11 @@ public class GoogleCastButtonManager
     mColor = color;
   }
 
+    @ReactProp(name = "triggersDefaultCastDialog", customType = "boolean")
+    public void triggersDefaultCastDialog(ColorableMediaRouteButton button, boolean useDefault) {
+        mUseDefaultDialog = useDefault;
+    }
+
   private void updateButtonState(MediaRouteButton button, int state) {
     // hide the button when no device available (default behavior is show it
     // disabled)
@@ -91,6 +97,14 @@ public class GoogleCastButtonManager
       super.setRemoteIndicatorDrawable(d);
       if (mColor != null)
         applyTint(mColor);
+    }
+
+    @Override
+    public boolean showDialog() {
+      if(mUseDefaultDialog){
+          return super.showDialog();
+      }
+      return true;
     }
 
     public void applyTint(Integer color) {

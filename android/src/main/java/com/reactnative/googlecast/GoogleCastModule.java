@@ -417,12 +417,16 @@ public class GoogleCastModule
             getReactApplicationContext().runOnUiQueueThread(new Runnable() {
                 @Override
                 public void run() {
-                  RemoteMediaClient client = mCastSession.getRemoteMediaClient();
-                  if (client == null) {
-                    return;
-                  }
-
-                  client.setStreamVolume(volume);
+                    try {
+                        mCastSession.setVolume(volume);
+                    } catch(IOException e) {
+                       Log.e(REACT_CLASS,e.getMessage());
+                    }
+//                  RemoteMediaClient client = mCastSession.getRemoteMediaClient();
+//                  if (client == null) {
+//                    return;
+//                  }
+//                  client.setStreamVolume(volume);
                 }
             });
         }
