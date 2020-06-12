@@ -174,6 +174,9 @@ class Main extends React.Component {
             title="Set volume 50%"
             onPress={() => GoogleCast.setVolume(0.5) }/>
         <Button
+            title="SKIP"
+            onPress={() => GoogleCast.skip(1000) }/>
+        <Button
             title="Show extended control"
             onPress={() =>  GoogleCast.launchExpandedControls() }/>
            <Button
