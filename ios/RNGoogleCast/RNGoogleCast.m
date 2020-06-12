@@ -289,6 +289,16 @@ RCT_EXPORT_METHOD(seek : (int)playPosition) {
   }
 }
 
+RCT_EXPORT_METHOD(skip : (int)interval) {
+  if (castSession) {
+    GCKMediaSeekOptions *seek = [[GCKMediaSeekOptions alloc] init];
+    seek.relative = YES;
+    seek.resumeState = GCKMediaResumeStatePlay;
+    seek.interval = interval;
+    [castSession.remoteMediaClient seekWithOptions:seek];
+  }
+}
+
 RCT_EXPORT_METHOD(setVolume : (float)volume) {
     if (castSession) {
       dispatch_sync(dispatch_get_main_queue(), ^{

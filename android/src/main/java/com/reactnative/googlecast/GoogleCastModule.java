@@ -2,9 +2,9 @@ package com.reactnative.googlecast;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.media.MediaRouter;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.mediarouter.media.MediaRouter;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -24,6 +24,7 @@ import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaStatus;
 import com.google.android.gms.cast.MediaTrack;
+import com.google.android.gms.cast.MediaSeekOptions;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.SessionManager;
@@ -33,6 +34,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.images.WebImage;
 import com.reactnative.googlecast.GoogleCastButtonManager;
+
+import static com.google.android.gms.cast.MediaSeekOptions.RESUME_STATE_PLAY;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -412,6 +415,28 @@ public class GoogleCastModule
     }
 
     @ReactMethod
+    public void skip(final int interval) {
+        if (mCastSession != null) {
+            getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+                @Override
+                public void run() {
+                    RemoteMediaClient client = mCastSession.getRemoteMediaClient();
+                    if (client == null) {
+                        return;
+                    }
+
+                    client.seek(new MediaSeekOptions
+                    .Builder()
+                    .setIsSeekToInfinite(true)
+                    .setPosition(interval * 1000)
+                    .setResumeState(RESUME_STATE_PLAY)
+                    .build());
+                }
+            });
+        }
+    }
+
+    @ReactMethod
     public void setVolume(final double volume) {
         if (mCastSession != null) {
             getReactApplicationContext().runOnUiQueueThread(new Runnable() {
@@ -426,7 +451,9 @@ public class GoogleCastModule
 //                  if (client == null) {
 //                    return;
 //                  }
+//
 //                  client.setStreamVolume(volume);
+
                 }
             });
         }

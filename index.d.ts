@@ -60,6 +60,7 @@ declare module 'react-native-google-cast' {
     pause(): void
     stop(): void
     seek(playPosition: number): void
+    skip(interval: number): void
     launchExpandedControls(): void
     showIntroductoryOverlay(): void
     setVolume(volume: number): void

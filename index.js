@@ -107,6 +107,14 @@ export default {
   seek(playPosition: number) {
     return GoogleCast.seek(playPosition)
   },
+    /**
+   * Skip the x miliseconds.
+   *
+   * @param {number} interval
+   */
+  skip(interval: number) {
+    return GoogleCast.skip(interval)
+  },
   launchExpandedControls: GoogleCast.launchExpandedControls,
   showIntroductoryOverlay: GoogleCast.showIntroductoryOverlay,
   setVolume(volume: number) {
