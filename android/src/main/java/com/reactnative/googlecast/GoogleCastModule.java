@@ -427,7 +427,7 @@ public class GoogleCastModule
 
                     client.seek(new MediaSeekOptions
                     .Builder()
-                    .setIsSeekToInfinite(true)
+                    .setIsSeekToInfinite(false)
                     .setPosition(interval * 1000)
                     .setResumeState(RESUME_STATE_PLAY)
                     .build());
