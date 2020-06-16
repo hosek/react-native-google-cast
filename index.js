@@ -107,14 +107,6 @@ export default {
   seek(playPosition: number) {
     return GoogleCast.seek(playPosition)
   },
-    /**
-   * Skip the x miliseconds.
-   *
-   * @param {number} interval
-   */
-  skip(interval: number) {
-    return GoogleCast.skip(interval)
-  },
   launchExpandedControls: GoogleCast.launchExpandedControls,
   showIntroductoryOverlay: GoogleCast.showIntroductoryOverlay,
   setVolume(volume: number) {
@@ -173,9 +165,14 @@ export default {
   unselectRoute(): Promise<number> {
     return GoogleCast.unselectRoute()
   },
-
-  
-
+  /**
+   * Skip the x miliseconds.
+   *
+   * @param {number} interval
+   */
+  skip(interval: number) {
+    return GoogleCast.skip(interval)
+  },
 
   /**
    * Enable/disable subtitles, optionally selecting a preferred subtitle language.
