@@ -449,13 +449,22 @@ public class GoogleCastModule
                     } catch(IOException e) {
                        Log.e(REACT_CLASS,e.getMessage());
                     }
-//                  RemoteMediaClient client = mCastSession.getRemoteMediaClient();
-//                  if (client == null) {
-//                    return;
-//                  }
-//
-//                  client.setStreamVolume(volume);
+                }
+            });
+        }
+    }
 
+    @ReactMethod
+    public void setDeviceMuted(final boolean muted) {
+        if (mCastSession != null) {
+            getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        mCastSession.setMute(muted);
+                    } catch(IOException e) {
+                       Log.e(REACT_CLASS,e.getMessage());
+                    }
                 }
             });
         }

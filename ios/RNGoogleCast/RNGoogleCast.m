@@ -307,6 +307,14 @@ RCT_EXPORT_METHOD(setVolume : (float)volume) {
     }
 }
 
+RCT_EXPORT_METHOD(setDeviceMuted : (bool)muted) {
+    if (castSession) {
+      dispatch_sync(dispatch_get_main_queue(), ^{
+        [castSession setDeviceMuted:muted];
+      });
+    }
+}
+
 RCT_EXPORT_METHOD(getVolume: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject) {
     if (castSession) {
@@ -361,12 +369,12 @@ RCT_EXPORT_METHOD(selectRoute: (NSString *)routeID
 RCT_EXPORT_METHOD(getMediaInfo: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject) {
 
-    GCKMediaInformation* metadata = castSession.remoteMediaClient.mediaStatus.mediaInformation;
+    //GCKMediaInformation* metadata = castSession.remoteMediaClient.mediaStatus.mediaInformation;
     //Or maybe only mediaInformation???
-    if (metadata==nil){
+    if (mediaInfo==nil){
         reject(@"Error geeting media metadata", @"No metatada available", [[NSError alloc]init]);
     }else{
-        resolve(metadata.description);
+        resolve(mediaInfo);
     }
 }
 
