@@ -430,7 +430,7 @@ public class GoogleCastModule
                     client.seek(new MediaSeekOptions
                     .Builder()
                     .setIsSeekToInfinite(false)
-                    .setPosition(interval * 1000)
+                    .setPosition(client.getApproximateStreamPosition() + interval * 1000)
                     .setResumeState(RESUME_STATE_PLAY)
                     .build());
                 }
