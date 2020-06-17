@@ -113,7 +113,7 @@ export default {
     return GoogleCast.setVolume(volume)
   },
   setDeviceMuted(muted: boolean) {
-    return GoogleCast.setDeviceMuted(volume)
+    return GoogleCast.setDeviceMuted(muted)
   },
   initChannel(namespace: string) {
     return GoogleCast.initChannel(namespace)
