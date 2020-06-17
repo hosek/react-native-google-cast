@@ -148,10 +148,12 @@ public class GoogleCastModule
         WritableArray devicesList = Arguments.createArray();
         try {
             for (MediaRouter.RouteInfo existingChromecast : mr.getRoutes()) {
-              WritableMap singleDevice = Arguments.createMap();
-              singleDevice.putString("id", existingChromecast.getId());
-              singleDevice.putString("name", existingChromecast.getName());
-              devicesList.pushMap(singleDevice);
+                if(existingChromecast.getDeviceType()==1){
+                    WritableMap singleDevice = Arguments.createMap();
+                    singleDevice.putString("id", existingChromecast.getId());
+                    singleDevice.putString("name", existingChromecast.getName());
+                    devicesList.pushMap(singleDevice);
+                }
           }
           promise.resolve(devicesList);
         } catch (IllegalViewOperationException e) {
