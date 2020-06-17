@@ -307,7 +307,7 @@ RCT_EXPORT_METHOD(setVolume : (float)volume) {
     }
 }
 
-RCT_EXPORT_METHOD(setDeviceMuted : (bool)muted) {
+RCT_EXPORT_METHOD(setDeviceMuted : (BOOL)muted) {
     if (castSession) {
       dispatch_sync(dispatch_get_main_queue(), ^{
         [castSession setDeviceMuted:muted];
