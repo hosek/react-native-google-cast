@@ -369,12 +369,39 @@ RCT_EXPORT_METHOD(selectRoute: (NSString *)routeID
 RCT_EXPORT_METHOD(getMediaInfo: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject) {
 
-    //GCKMediaInformation* metadata = castSession.remoteMediaClient.mediaStatus.mediaInformation;
-    //Or maybe only mediaInformation???
-    if (mediaInfo==nil){
+    if (mediaInfo == nil){
         reject(@"Error geeting media metadata", @"No metatada available", [[NSError alloc]init]);
     }else{
-        resolve(mediaInfo);
+
+      NSMutableArray *images = [[NSMutableArray alloc] init]; 
+      for (GCKImage* currentImage in [mediaInfo.metadata images])
+      {
+          [images addObject:[currentImage.URL absoluteString]];
+      }
+
+      NSDictionary *metadata = [[NSDictionary alloc] 
+      initWithObjectsAndKeys:
+      [mediaInfo.metadata stringForKey:kGCKMetadataKeyTitle],@"title",
+      [mediaInfo.metadata stringForKey:kGCKMetadataKeyStudio],@"studio",
+      [mediaInfo.metadata stringForKey:kGCKMetadataKeySubtitle],@"subtitle",
+       mediaInfo.customData, @"customData",
+       images,@"images",
+      nil];   
+
+      NSDictionary *myDictionary = [[NSDictionary alloc] 
+      initWithObjectsAndKeys:
+      mediaInfo.contentID,@"contentId",
+      metadata, @"metadata",
+      nil];   
+
+      NSMutableDictionary *result = [myDictionary mutableCopy];
+      NSError *error;
+      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:&error];
+      if(error != nil){
+          reject(@"Error geeting media metadata", @"Cant convert it to JSON", error);
+      }
+      NSString *resultAsString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+      resolve(resultAsString);
     }
 }
 
