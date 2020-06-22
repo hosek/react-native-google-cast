@@ -159,6 +159,14 @@ export default {
   getVolume(): Promise<number> {
     return GoogleCast.getVolume()
   },
+  /**
+   * Is device muted.
+   *
+   * @returns muted.
+   */
+  isMuted(): Promise<boolean> {
+    return GoogleCast.isMuted()
+  },
 
   /**
    * Disconnect.

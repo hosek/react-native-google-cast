@@ -486,6 +486,21 @@ public class GoogleCastModule
     }
 
     @ReactMethod
+    public void isMuted(final Promise promise) {
+        if (mCastSession != null) {
+            getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+                @Override
+                public void run() {
+                  if (mCastSession == null) {
+                      promise.reject("isMuted","No session");
+                  }
+                  promise.resolve(mCastSession.isMute());
+                }
+            });
+        }
+    }
+
+    @ReactMethod
     public void endSession(final boolean stopCasting, final Promise promise) {
         getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
