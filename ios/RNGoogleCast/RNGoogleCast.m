@@ -327,7 +327,7 @@ RCT_EXPORT_METHOD(getVolume: (RCTPromiseResolveBlock) resolve
 RCT_EXPORT_METHOD(isMuted: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject) {
     if (castSession) {
-        resolve(castSession.currentDeviceMuted);
+        resolve([NSNumber numberWithBool:castSession.currentDeviceMuted]);
     }else{
       reject(@"Error isMuted", @"No cast session available", [[NSError alloc]init]);
     }
