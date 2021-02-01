@@ -1,5 +1,7 @@
 [![npm version](https://badge.fury.io/js/react-native-google-cast.svg)](https://badge.fury.io/js/react-native-google-cast)
 
+Outdated, use [https://github.com/24i/react-native-google-cast](https://github.com/24i/react-native-google-cast) instead
+
 # react-native-google-cast
 
 This library wraps the native Google Cast SDK for iOS and Android, providing a unified JavaScript interface.
